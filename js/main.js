@@ -33,9 +33,14 @@ var createAnnouncements = function (AnnouncementsQuantity) {
       avatar: 'img/avatars/user0' + (i + 1) + '.png'
     };
 
+    announcement['location'] = {
+      x: getRandomInteger(50, 1150),
+      y: getRandomInteger(130, 630)
+    };
+
     announcement['offer'] = {
       title: 'Предложение номер ' + i,
-      address: location.x + ', ' + location.y,
+      address: announcement.location.x + ', ' + announcement.location.y,
       price: getRandomInteger(0, 1000000),
       type: getRandomElement(TYPES),
       rooms: getRandomInteger(1, 5),
@@ -47,10 +52,7 @@ var createAnnouncements = function (AnnouncementsQuantity) {
       photos: getRandomElements(PHOTOS)
     };
 
-    announcement['location'] = {
-      x: getRandomInteger(50, 1150),
-      y: getRandomInteger(130, 630)
-    };
+
     AnnouncementList.push(announcement);
   }
 
