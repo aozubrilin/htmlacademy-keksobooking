@@ -4,7 +4,7 @@ var TYPES = ['place', 'flat', 'house', 'bungalo'];
 var TIMES_CHECK = ['12:00', '13:00', '14:00'];
 var FEATURES_LIST = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
 var PHOTOS = ['http://o0.github.io/assets/images/tokyo/hotel1.jpg', 'http://o0.github.io/assets/images/tokyo/hotel2.jpg', 'http://o0.github.io/assets/images/tokyo/hotel3.jpg'];
-var ANNOUNCEMENTS_QUANTITY = 8;
+var OBJECT_QUANTITY = 8;
 
 var getRandomInteger = function (min, max) {
   var rand = min + Math.random() * (max + 1 - min);
@@ -24,17 +24,17 @@ var getRandomElements = function (array) {
   return elements;
 };
 
-var createAnnouncements = function (AnnouncementsQuantity) {
-  var AnnouncementList = [];
+var createAnnouncements = function (announcementsQuantity) {
+  var announcementLists = [];
 
-  for (var i = 0; i < AnnouncementsQuantity; i++) {
+  for (var i = 0; i < announcementsQuantity; i++) {
     var announcement = {};
     announcement['author'] = {
       avatar: 'img/avatars/user0' + (i + 1) + '.png'
     };
 
     announcement['location'] = {
-      x: getRandomInteger(50, 1150),
+      x: getRandomInteger(0, 1200),
       y: getRandomInteger(130, 630)
     };
 
@@ -52,14 +52,13 @@ var createAnnouncements = function (AnnouncementsQuantity) {
       photos: getRandomElements(PHOTOS)
     };
 
-
-    AnnouncementList.push(announcement);
+    announcementLists.push(announcement);
   }
 
-  return AnnouncementList;
+  return announcementLists;
 };
 
-var announcements = createAnnouncements(ANNOUNCEMENTS_QUANTITY);
+var announcements = createAnnouncements(OBJECT_QUANTITY);
 
 var map = document.querySelector('.map');
 map.classList.toggle('map--faded');
@@ -67,20 +66,20 @@ map.classList.toggle('map--faded');
 var renderPin = function (announcement) {
   var similarPinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
   var pin = similarPinTemplate.cloneNode(true);
+  var image = pin.querySelector('img');
 
   pin.style.left = announcement.location.x - 25 + 'px';
   pin.style.top = announcement.location.y - 70 + 'px';
-  pin.querySelector('img').src = announcement.author.avatar;
-  pin.querySelector('img').alt = announcement.offer.title;
+  image.src = announcement.author.avatar;
+  image.alt = announcement.offer.title;
 
   return pin;
 };
 
 var renderPins = function () {
-
   var similarPins = document.querySelector('.map__pins');
   var fragment = document.createDocumentFragment();
-  for (var i = 0; i < announcements.length - 1; i++) {
+  for (var i = 0; i < announcements.length; i++) {
     fragment.appendChild(renderPin(announcements[i]));
   }
 
@@ -88,3 +87,4 @@ var renderPins = function () {
 };
 
 renderPins();
+
