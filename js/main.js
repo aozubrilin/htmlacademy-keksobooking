@@ -12,7 +12,6 @@ var PIN_MAIN_GAP_X = 65 / 2;
 var PIN_MAIN_GAP_Y = 65 / 2;
 var PIN_MAIN_GAP_AFTER_Y = 80;
 
-var AD_FORM_ACTION = 'https://javascript.pages.academy/keksobooking';
 var FORMATS_IMG = 'image/png, image/jpeg';
 var TITLE_MIN_LENGTH = 30;
 var TITLE_MAX_LENGTH = 100;
@@ -289,7 +288,6 @@ var capacityMapping = {
 
 var setAdFormFields = function () {
 
-  adForm.action = AD_FORM_ACTION;
   adFormAddress.readOnly = true;
 
   adFormPrice.required = true;
