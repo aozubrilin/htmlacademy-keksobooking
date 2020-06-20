@@ -129,7 +129,8 @@
   };
 
   window.card = {
-    renderCard: renderCard
+    renderCard: renderCard,
+    announcements: announcements,
   };
 
 })();

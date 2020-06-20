@@ -2,9 +2,9 @@
 
 (function () {
 
-  var PIN_MAIN_GAP_X = 65 / 2;
-  var PIN_MAIN_GAP_Y = 65 / 2;
-  var PIN_MAIN_GAP_AFTER_Y = 80;
+  var PIN_MAIN_GAP_X = 62 / 2;
+  var PIN_MAIN_GAP_Y = 62 / 2;
+  var PIN_MAIN_GAP_AFTER_Y = 84;
 
   var setFormFieldsDisable = window.util.setFormFieldsDisable;
   var setAdFormAddress = window.form.setAdFormAddress;
