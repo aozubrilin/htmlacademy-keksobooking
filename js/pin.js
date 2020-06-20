@@ -5,7 +5,7 @@
   var PIN_GAP_X = 50 / 2;
   var PIN_GAP_Y = 70;
 
-  var announcements = window.data.createAnnouncements();
+  var announcements = window.card.announcements;
   var isEnterEvent = window.util.isEnterEvent;
   var isMouseLeftButtonClick = window.util.isMouseLeftButtonClick;
   var renderCard = window.card.renderCard;
