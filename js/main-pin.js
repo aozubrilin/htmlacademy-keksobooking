@@ -21,6 +21,7 @@
 
   var mouseLefClick = false;
 
+
   var onMapPinMainClickHandle = function (evt) {
 
     if (isMouseLeftButtonClick(evt) && !mouseLefClick) {
