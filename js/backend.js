@@ -4,9 +4,7 @@
 
   var URL_GET = 'https://javascript.pages.academy/keksobooking/data';
   var URL_POST = 'https://javascript.pages.academy/keksobooking';
-  var StatusCode = {
-    OK: 200
-  };
+  var STATUS_CODE_OK = 200;
   var TIMEOUT_IN_MS = 10000;
 
   var createXhr = function (onLoad, onError) {
@@ -15,7 +13,7 @@
     xhr.responseType = 'json';
 
     xhr.addEventListener('load', function () {
-      if (xhr.status === StatusCode.OK) {
+      if (xhr.status === STATUS_CODE_OK) {
         onLoad(xhr.response);
       } else {
         onError('Статус ответа: ' + xhr.status + ' ' + xhr.statusText);
