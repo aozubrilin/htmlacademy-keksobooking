@@ -5,13 +5,13 @@
   var PIN_GAP_X = 50 / 2;
   var PIN_GAP_Y = 70;
 
-  var announcements = window.card.announcements;
   var isEnterEvent = window.util.isEnterEvent;
   var isMouseLeftButtonClick = window.util.isMouseLeftButtonClick;
   var renderCard = window.card.renderCard;
 
   var similarPins = document.querySelector('.map__pins');
   var similarPinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
+
 
   var createPin = function (announcement, offerId) {
 
@@ -28,7 +28,7 @@
     return pin;
   };
 
-  var renderPins = function () {
+  var renderPins = function (announcements) {
 
     var fragment = document.createDocumentFragment();
     for (var index = 0; index < announcements.length; index++) {
@@ -63,9 +63,8 @@
     }
   };
 
-
   window.pin = {
-    renderPins: renderPins,
+    renderPins: renderPins
   };
 
 })();

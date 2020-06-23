@@ -3,9 +3,7 @@
 (function () {
 
   var TYPES_RU = ['Дворец', 'Квартира', 'Дом', 'Бунгало'];
-
-  var types = window.data.TYPES;
-  var announcements = window.data.createAnnouncements();
+  var TYPES = ['place', 'flat', 'house', 'bungalo'];
   var isEscEvent = window.util.isEscEvent;
   var isEnterEvent = window.util.isEnterEvent;
   var isMouseLeftButtonClick = window.util.isMouseLeftButtonClick;
@@ -25,7 +23,7 @@
 
     deleteMapCardPopup();
 
-    var announcement = announcements[offerId];
+    var announcement = window.pin.announcements[offerId];
 
     cardElement.querySelector('.popup__avatar').src = announcement.author.avatar;
     checkingData(cardElement.querySelector('.popup__title'), announcement.offer.title, announcement.offer.title);
@@ -59,7 +57,7 @@
     var ruWord = '';
 
     for (var i = 0; i < TYPES_RU.length; i++) {
-      if (types[i] === enWord) {
+      if (TYPES[i] === enWord) {
         ruWord = TYPES_RU[i];
       }
     }
@@ -130,7 +128,6 @@
 
   window.card = {
     renderCard: renderCard,
-    announcements: announcements,
   };
 
 })();
