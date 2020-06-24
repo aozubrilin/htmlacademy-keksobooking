@@ -15,6 +15,8 @@
   };
 
   var setFormFieldsDisable = window.util.setFormFieldsDisable;
+  var isEscEvent = window.util.isEscEvent;
+  var isMouseLeftButtonClick = window.util.isMouseLeftButtonClick;
 
   var adForm = document.querySelector('.ad-form');
   var adFormAddress = document.querySelector('#address');
@@ -29,7 +31,9 @@
   var adFormTimefieldset = adForm.querySelector('.ad-form__element--time');
   var adFormFields = adForm.querySelectorAll('fieldset');
   var adFormImages = adForm.querySelectorAll('input[type="file"]');
+  var adFormResetBtn = adForm.querySelector('.ad-form__reset');
   var mapPinMain = document.querySelector('.map__pin--main');
+  var main = document.querySelector('main');
 
   var capacityMapping = {
 
@@ -142,7 +146,57 @@
     setFormFieldsDisable(adFormFields, false);
   };
 
-  setAdFormDisable();
+  var submitHandler = function (evt) {
+    window.backend.save(new FormData(adForm), function () {
+      var successTemplate = document.querySelector('#success').content.querySelector('.success');
+      var success = successTemplate.cloneNode(true);
+      main.appendChild(success);
+      window.map.setMapDisable();
+
+      var onSuccessClose = function (evtClose) {
+        if (isMouseLeftButtonClick(evtClose) || isEscEvent(evtClose)) {
+          main.removeChild(success);
+        }
+
+        main.removeEventListener('click', onSuccessClose);
+        document.removeEventListener('keydown', onSuccessClose);
+      };
+
+      main.addEventListener('click', onSuccessClose);
+      document.addEventListener('keydown', onSuccessClose);
+
+    }, submitError);
+    evt.preventDefault();
+  };
+
+  var submitError = function () {
+    var errorTemplate = document.querySelector('#error').content.querySelector('.error');
+    var error = errorTemplate.cloneNode(true);
+    main.appendChild(error);
+
+    var onErrorClose = function (evtClose) {
+      if (isMouseLeftButtonClick(evtClose) || isEscEvent(evtClose)) {
+        main.removeChild(error);
+      }
+
+      main.removeEventListener('click', onErrorClose);
+      document.removeEventListener('keydown', onErrorClose);
+    };
+
+    main.addEventListener('click', onErrorClose);
+    document.addEventListener('keydown', onErrorClose);
+
+  };
+
+  var onResetFormClick = function (evt) {
+    if (isMouseLeftButtonClick(evt)) {
+      window.map.setMapDisable();
+    }
+    evt.preventDefault();
+  };
+
+  adFormResetBtn.addEventListener('click', onResetFormClick);
+
   setAdFormFields();
   adFormRoomNumber.addEventListener('change', onGuestInputChange);
   onGuestInputChange();
@@ -153,7 +207,9 @@
 
   window.form = {
     setAdFormEnable: setAdFormEnable,
+    setAdFormDisable: setAdFormDisable,
     setAdFormAddress: setAdFormAddress,
+    submitHandler: submitHandler
   };
 
 })();
