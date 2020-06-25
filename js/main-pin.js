@@ -18,16 +18,15 @@
   var mapPinMain = map.querySelector('.map__pin--main');
   var pinLeftMax = map.offsetWidth;
 
-
-  var mouseLefClick = false;
-
+  window.mainPinClick = false;
 
   var onMapPinMainClickHandle = function (evt) {
 
-    if (isMouseLeftButtonClick(evt) && !mouseLefClick) {
+    if (isMouseLeftButtonClick(evt) && !window.mainPinClick) {
       setAdFormEnable();
       setMapEnable();
-      mouseLefClick = true;
+
+      window.mainPinClick = true;
     }
 
     var startCoords = {

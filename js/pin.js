@@ -12,7 +12,6 @@
   var similarPins = document.querySelector('.map__pins');
   var similarPinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
 
-
   var createPin = function (announcement, offerId) {
 
     var pin = similarPinTemplate.cloneNode(true);
