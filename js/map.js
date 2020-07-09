@@ -6,9 +6,7 @@
   var PIN_MAIN_GAP_Y = 62 / 2;
   var PIN_MAIN_GAP_AFTER_Y = 84;
 
-  var setFormFieldsDisable = window.util.setFormFieldsDisable;
   var setAdFormAddress = window.form.setAdFormAddress;
-  var renderPins = window.pin.renderPins;
   var load = window.backend.load;
   var setAdFormDisable = window.form.setAdFormDisable;
   var submitHandler = window.form.submitHandler;
@@ -16,7 +14,6 @@
   var map = document.querySelector('.map');
   var mapPinMain = map.querySelector('.map__pin--main');
   var mapFilterForm = map.querySelector('.map__filters');
-  var mapFilters = mapFilterForm.querySelectorAll('.map__filter');
   var mapFeatures = mapFilterForm.querySelector('.map__features');
   var adForm = document.querySelector('.ad-form');
 
@@ -34,7 +31,7 @@
 
   var successHandler = function (announcements) {
     window.pin.announcements = announcements;
-    renderPins(announcements);
+    window.filter.setFilters();
   };
 
   var setMapDisable = function () {
@@ -42,11 +39,12 @@
     mapFilterForm.classList.add('ad-form--disabled');
     mapFeatures.disabled = true;
     setAdFormDisable();
-    setFormFieldsDisable(mapFilters, true);
+    window.filter.setDisable();
     adForm.reset();
     mapFilterForm.reset();
     adForm.removeEventListener('submit', submitHandler);
     window.mainPinClick = false;
+
     mapPinMain.style.left = 570 + 'px';
     mapPinMain.style.top = 375 + 'px';
     setAdFormAddress(PIN_MAIN_GAP_X, PIN_MAIN_GAP_Y);
@@ -66,7 +64,7 @@
     map.classList.remove('map--faded');
     mapFilterForm.classList.remove('ad-form--disabled');
     mapFeatures.disabled = false;
-    setFormFieldsDisable(mapFilters, false);
+    window.filter.setEnable();
     setAdFormAddress(PIN_MAIN_GAP_X, PIN_MAIN_GAP_AFTER_Y);
     load(successHandler, errorHandler);
     adForm.addEventListener('submit', submitHandler);
@@ -75,8 +73,8 @@
   setMapDisable();
 
   window.map = {
-    setMapEnable: setMapEnable,
-    setMapDisable: setMapDisable
+    setMapDisable: setMapDisable,
+    setMapEnable: setMapEnable
   };
 
 })();

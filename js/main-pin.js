@@ -22,13 +22,12 @@
 
   var onMapPinMainClickHandle = function (evt) {
 
-    if (isMouseLeftButtonClick(evt) && !window.mainPinClick) {
+    if (isMouseLeftButtonClick(evt) && window.mainPinClick === false) {
+      window.mainPinClick = true;
       setAdFormEnable();
       setMapEnable();
 
-      window.mainPinClick = true;
     }
-
     var startCoords = {
       x: evt.clientX,
       y: evt.clientY
