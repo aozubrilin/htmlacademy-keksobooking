@@ -128,6 +128,7 @@
 
   window.card = {
     renderCard: renderCard,
+    deleteMapCardPopup: deleteMapCardPopup
   };
 
 })();
