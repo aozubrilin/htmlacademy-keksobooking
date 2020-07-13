@@ -44,6 +44,7 @@
     mapFilterForm.reset();
     adForm.removeEventListener('submit', submitHandler);
     window.mainPinClick = false;
+    window.loadPhotos.setDisable();
 
     mapPinMain.style.left = 570 + 'px';
     mapPinMain.style.top = 375 + 'px';
