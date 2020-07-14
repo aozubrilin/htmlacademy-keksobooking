@@ -6,7 +6,8 @@
   var TITLE_MIN_LENGTH = 30;
   var TITLE_MAX_LENGTH = 100;
   var PRICE_MAX_VALUE = 1000000;
-
+  var DEFAUL_PRICE_PLACEHOLDER = '1000';
+  var STYLE_FORM_VALID = 'border: 2px solid red;';
   var PRICE_MIN_VALUE = {
     'bungalo': 0,
     'flat': 1000,
@@ -19,7 +20,8 @@
   var isMouseLeftButtonClick = window.util.isMouseLeftButtonClick;
 
   var adForm = document.querySelector('.ad-form');
-  var adFormAddress = document.querySelector('#address');
+  var allInputs = adForm.querySelectorAll('input');
+  var adFormAddress = adForm.querySelector('#address');
   var adFormRoomNumber = adForm.querySelector('#room_number');
   var adFormCapacity = adForm.querySelector('#capacity');
   var adFormCapacityOptions = adFormCapacity.querySelectorAll('option');
@@ -34,6 +36,7 @@
   var adFormResetBtn = adForm.querySelector('.ad-form__reset');
   var mapPinMain = document.querySelector('.map__pin--main');
   var main = document.querySelector('main');
+  var errorCount = 0;
 
   var capacityMapping = {
 
@@ -60,7 +63,6 @@
     adFormAddress.readOnly = true;
 
     adFormPrice.required = true;
-    adFormPrice.placeholder = 1000;
     adFormPrice.max = PRICE_MAX_VALUE;
 
     adFormTitle.maxLength = TITLE_MAX_LENGTH;
@@ -72,22 +74,22 @@
     });
   };
 
-  function onGuestInputChange() {
+  var onGuestInputChange = function () {
     setAllOptions(adFormCapacityOptions.length);
     capacityMapping[adFormRoomNumber.value].items.forEach(function (item) {
       adFormCapacityOptions[item].disabled = false;
     });
     adFormCapacity.value = capacityMapping[adFormRoomNumber.value].value;
-  }
+  };
 
-  function setAllOptions(count) {
+  var setAllOptions = function (count) {
     for (var i = 0; i < count; i++) {
       adFormCapacityOptions[i].disabled = true;
       if (adFormCapacityOptions[i].selected === true) {
         adFormCapacityOptions[i].removeAttribute('selected');
       }
     }
-  }
+  };
 
   var onCheckTitleValidity = function () {
 
@@ -110,6 +112,7 @@
     adFormPrice.min = PRICE_MIN_VALUE[adFormType.value];
     var minPriceType = adFormPrice.min;
     var validity = adFormPrice.validity;
+    adFormPrice.placeholder = adFormPrice.min;
 
     if (validity.rangeUnderflow) {
       adFormPrice.setCustomValidity('Минимальная цена на этот тип жилья составляет ' + minPriceType + 'руб.');
@@ -136,37 +139,52 @@
     }
   };
 
-  var setAdFormDisable = function () {
-    adForm.classList.add('ad-form--disabled');
-    setFormFieldsDisable(adFormFields, true);
-  };
-
-  var setAdFormEnable = function () {
-    adForm.classList.remove('ad-form--disabled');
-    setFormFieldsDisable(adFormFields, false);
-  };
-
   var submitHandler = function (evt) {
-    window.backend.save(new FormData(adForm), function () {
-      var successTemplate = document.querySelector('#success').content.querySelector('.success');
-      var success = successTemplate.cloneNode(true);
-      main.appendChild(success);
-      window.map.setMapDisable();
-
-      var onSuccessClose = function (evtClose) {
-        if (isMouseLeftButtonClick(evtClose) || isEscEvent(evtClose)) {
-          main.removeChild(success);
-        }
-
-        main.removeEventListener('click', onSuccessClose);
-        document.removeEventListener('keydown', onSuccessClose);
-      };
-
-      main.addEventListener('click', onSuccessClose);
-      document.addEventListener('keydown', onSuccessClose);
-
-    }, submitError);
+    checkForm(allInputs);
     evt.preventDefault();
+    if (errorCount === 0) {
+      evt.preventDefault();
+      window.backend.save(new FormData(adForm), function () {
+        var successTemplate = document.querySelector('#success').content.querySelector('.success');
+        var success = successTemplate.cloneNode(true);
+        main.appendChild(success);
+        window.map.setDisable();
+
+        var onClickMouseLeftButton = function (evtClose) {
+          if (isMouseLeftButtonClick(evtClose)) {
+            main.removeChild(success);
+          }
+
+          main.removeEventListener('click', onClickMouseLeftButton);
+          document.removeEventListener('keydown', onPressEsc);
+        };
+
+        var onPressEsc = function (evtClose) {
+          if (isEscEvent(evtClose)) {
+            main.removeChild(success);
+          }
+
+          main.removeEventListener('click', onClickMouseLeftButton);
+          document.removeEventListener('keydown', onPressEsc);
+        };
+
+        main.addEventListener('click', onClickMouseLeftButton);
+        document.addEventListener('keydown', onPressEsc);
+
+      }, submitError);
+    }
+  };
+
+  var checkForm = function (formElements) {
+    errorCount = 0;
+    for (var i = 0; i < formElements.length; i++) {
+      if (!formElements[i].validity.valid) {
+        formElements[i].style = STYLE_FORM_VALID;
+        errorCount++;
+      } else {
+        formElements[i].style = '';
+      }
+    }
   };
 
   var submitError = function () {
@@ -174,41 +192,68 @@
     var error = errorTemplate.cloneNode(true);
     main.appendChild(error);
 
-    var onErrorClose = function (evtClose) {
-      if (isMouseLeftButtonClick(evtClose) || isEscEvent(evtClose)) {
+    var onClickMouseButton = function (evtClose) {
+      if (isMouseLeftButtonClick(evtClose)) {
         main.removeChild(error);
       }
 
-      main.removeEventListener('click', onErrorClose);
-      document.removeEventListener('keydown', onErrorClose);
+      main.removeEventListener('click', onClickMouseButton);
+      document.removeEventListener('keydown', onPressEsc);
     };
 
-    main.addEventListener('click', onErrorClose);
-    document.addEventListener('keydown', onErrorClose);
+    var onPressEsc = function (evtClose) {
+      if (isEscEvent(evtClose)) {
+        main.removeChild(error);
+      }
+
+      main.removeEventListener('click', onClickMouseButton);
+      document.removeEventListener('keydown', onPressEsc);
+    };
+
+    main.addEventListener('click', onClickMouseButton);
+    document.addEventListener('keydown', onPressEsc);
 
   };
 
   var onResetFormClick = function (evt) {
     if (isMouseLeftButtonClick(evt)) {
-      window.map.setMapDisable();
+      window.map.setDisable();
     }
     evt.preventDefault();
   };
 
-  adFormResetBtn.addEventListener('click', onResetFormClick);
+  var setAdFormDisable = function () {
+    adForm.classList.add('ad-form--disabled');
+    setFormFieldsDisable(adFormFields, true);
+    adFormPrice.placeholder = DEFAUL_PRICE_PLACEHOLDER;
+    adForm.reset();
+    onGuestInputChange();
+    adForm.removeEventListener('submit', submitHandler);
+    adFormRoomNumber.removeEventListener('change', onGuestInputChange);
+    adFormTitle.removeEventListener('input', onCheckTitleValidity);
+    adFormType.removeEventListener('change', onCheckPriceValidity);
+    adFormPrice.removeEventListener('input', onCheckPriceValidity);
+    adFormTimefieldset.removeEventListener('change', onTimeSync);
+    adFormResetBtn.removeEventListener('click', onResetFormClick);
+  };
 
-  setAdFormFields();
-  adFormRoomNumber.addEventListener('change', onGuestInputChange);
-  onGuestInputChange();
-  adFormTitle.addEventListener('input', onCheckTitleValidity);
-  adFormType.addEventListener('change', onCheckPriceValidity);
-  adFormPrice.addEventListener('input', onCheckPriceValidity);
-  adFormTimefieldset.addEventListener('change', onTimeSync);
+  var setAdFormEnable = function () {
+    adForm.classList.remove('ad-form--disabled');
+    setFormFieldsDisable(adFormFields, false);
+    adForm.addEventListener('submit', submitHandler);
+    setAdFormFields();
+    adFormRoomNumber.addEventListener('change', onGuestInputChange);
+    adFormTitle.addEventListener('input', onCheckTitleValidity);
+    adFormType.addEventListener('change', onCheckPriceValidity);
+    adFormPrice.addEventListener('input', onCheckPriceValidity);
+    adFormTimefieldset.addEventListener('change', onTimeSync);
+    adFormResetBtn.addEventListener('click', onResetFormClick);
+  };
 
   window.form = {
-    setAdFormEnable: setAdFormEnable,
-    setAdFormDisable: setAdFormDisable,
-    setAdFormAddress: setAdFormAddress,
+    setEnable: setAdFormEnable,
+    setDisable: setAdFormDisable,
+    setAddress: setAdFormAddress,
     submitHandler: submitHandler
   };
 

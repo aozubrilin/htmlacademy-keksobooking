@@ -5,25 +5,29 @@
   var PIN_MAIN_GAP_X = 62 / 2;
   var PIN_MAIN_GAP_Y = 62 / 2;
   var PIN_MAIN_GAP_AFTER_Y = 84;
+  var PIN_MAIN_STYLES = {
+    left: '570px',
+    top: '375px'
+  };
 
-  var setAdFormAddress = window.form.setAdFormAddress;
-  var load = window.backend.load;
-  var setAdFormDisable = window.form.setAdFormDisable;
-  var submitHandler = window.form.submitHandler;
+  var ERROR_MESSAGE_STYLES = {
+    util: 'z-index: 100; margin: 0 auto; text-align: center; background-color: red;',
+    position: 'absolute',
+    left: 0,
+    top: 0,
+    fontSize: '35px'
+  };
 
   var map = document.querySelector('.map');
   var mapPinMain = map.querySelector('.map__pin--main');
-  var mapFilterForm = map.querySelector('.map__filters');
-  var mapFeatures = mapFilterForm.querySelector('.map__features');
-  var adForm = document.querySelector('.ad-form');
 
   var errorHandler = function (errorMessage) {
     var node = document.createElement('div');
-    node.style = 'z-index: 100; margin: 0 auto; text-align: center; background-color: red;';
-    node.style.position = 'absolute';
-    node.style.left = 0;
-    node.style.right = 0;
-    node.style.fontSize = '30px';
+    node.style = ERROR_MESSAGE_STYLES.util;
+    node.style.position = ERROR_MESSAGE_STYLES.position;
+    node.style.left = ERROR_MESSAGE_STYLES.left;
+    node.style.right = ERROR_MESSAGE_STYLES.right;
+    node.style.fontSize = ERROR_MESSAGE_STYLES.fontSize;
 
     node.textContent = errorMessage;
     map.appendChild(node);
@@ -36,46 +40,30 @@
 
   var setMapDisable = function () {
     map.classList.add('map--faded');
-    mapFilterForm.classList.add('ad-form--disabled');
-    mapFeatures.disabled = true;
-    setAdFormDisable();
+    window.form.setDisable();
     window.filter.setDisable();
-    adForm.reset();
-    mapFilterForm.reset();
-    adForm.removeEventListener('submit', submitHandler);
     window.mainPinClick = false;
     window.loadPhotos.setDisable();
-
-    mapPinMain.style.left = 570 + 'px';
-    mapPinMain.style.top = 375 + 'px';
-    setAdFormAddress(PIN_MAIN_GAP_X, PIN_MAIN_GAP_Y);
-
-    var mapPins = map.querySelectorAll('.map__pin:not(.map__pin--main)');
-    mapPins.forEach(function (mapPin) {
-      mapPin.remove();
-    });
-
-    var mapCard = map.querySelector('.map__card');
-    if (mapCard !== null) {
-      mapCard.remove();
-    }
+    mapPinMain.style.left = PIN_MAIN_STYLES.left;
+    mapPinMain.style.top = PIN_MAIN_STYLES.top;
+    window.form.setAddress(PIN_MAIN_GAP_X, PIN_MAIN_GAP_Y);
+    window.pin.remove();
+    window.card.deleteMapPopup();
   };
 
   var setMapEnable = function () {
     map.classList.remove('map--faded');
-    mapFilterForm.classList.remove('ad-form--disabled');
-    mapFeatures.disabled = false;
     window.filter.setEnable();
-    setAdFormAddress(PIN_MAIN_GAP_X, PIN_MAIN_GAP_AFTER_Y);
-    load(successHandler, errorHandler);
-    adForm.addEventListener('submit', submitHandler);
+    window.form.setEnable();
+    window.form.setAddress(PIN_MAIN_GAP_X, PIN_MAIN_GAP_AFTER_Y);
+    window.backend.load(successHandler, errorHandler);
   };
 
   setMapDisable();
 
   window.map = {
-    setMapDisable: setMapDisable,
-    setMapEnable: setMapEnable
+    setDisable: setMapDisable,
+    setEnable: setMapEnable
   };
 
 })();

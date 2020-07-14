@@ -8,11 +8,8 @@
   var PIN_TOP_MIN = 130;
   var PIN_TOP_MAX = 630;
 
-  var setAdFormEnable = window.form.setAdFormEnable;
-  var setMapEnable = window.map.setMapEnable;
   var isMouseLeftButtonClick = window.util.isMouseLeftButtonClick;
   var isEnterEvent = window.util.isEnterEvent;
-  var setAdFormAddress = window.form.setAdFormAddress;
 
   var map = document.querySelector('.map');
   var mapPinMain = map.querySelector('.map__pin--main');
@@ -24,10 +21,8 @@
 
     if (isMouseLeftButtonClick(evt) && window.mainPinClick === false) {
       window.mainPinClick = true;
-      setAdFormEnable();
       window.loadPhotos.setEnable();
-      setMapEnable();
-
+      window.map.setEnable();
     }
     var startCoords = {
       x: evt.clientX,
@@ -69,7 +64,7 @@
       mapPinMain.style.top = pinTop + 'px';
       mapPinMain.style.left = pinLeft + 'px';
 
-      setAdFormAddress(PIN_MAIN_GAP_X, PIN_MAIN_GAP_AFTER_Y);
+      window.form.setAddress(PIN_MAIN_GAP_X, PIN_MAIN_GAP_AFTER_Y);
     };
 
     var onMouseUp = function (upEvt) {
@@ -94,8 +89,7 @@
 
   var onMapPinMainPressEnter = function (evt) {
     if (isEnterEvent(evt)) {
-      setAdFormEnable();
-      setMapEnable();
+      window.map.setEnable();
     }
   };
 

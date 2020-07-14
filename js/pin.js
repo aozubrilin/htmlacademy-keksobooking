@@ -7,7 +7,7 @@
 
   var isEnterEvent = window.util.isEnterEvent;
   var isMouseLeftButtonClick = window.util.isMouseLeftButtonClick;
-  var renderCard = window.card.renderCard;
+  var renderCard = window.card.render;
 
   var similarPins = document.querySelector('.map__pins');
   var similarPinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
@@ -27,13 +27,15 @@
     return pin;
   };
 
-
   var removePins = function () {
     var pins = similarPins.querySelectorAll('.map__pin:not(.map__pin--main)');
 
     pins.forEach(function (item) {
       item.remove();
     });
+
+    similarPins.removeEventListener('mousedown', onMapPinClickHandle);
+    similarPins.removeEventListener('keydown', onMapPinPressEnter);
   };
 
   var renderPins = function (announcements) {
@@ -51,31 +53,31 @@
     similarPins.addEventListener('keydown', onMapPinPressEnter);
   };
 
-  var getMapPinId = function (evt) {
-
+  var showCardforPinId = function (evt) {
     var mapPin = evt.target.closest('.map__pin:not(.map__pin--main)');
-
-    if (mapPin && mapPin.dataset.offerId !== null) {
+    if (mapPin !== null && !mapPin.classList.contains('map__pin--active')) {
       var mapPinId = mapPin.dataset.offerId;
+      renderCard(mapPinId);
+      mapPin.classList.add('map__pin--active');
     }
-    return mapPinId;
   };
 
   var onMapPinClickHandle = function (evt) {
     if (isMouseLeftButtonClick(evt)) {
-      renderCard(getMapPinId(evt));
+      showCardforPinId(evt);
     }
   };
 
   var onMapPinPressEnter = function (evt) {
     if (isEnterEvent(evt)) {
-      renderCard(getMapPinId(evt));
+      showCardforPinId(evt);
     }
   };
 
   window.pin = {
-    renderPins: renderPins,
-    createPin: createPin
+    render: renderPins,
+    create: createPin,
+    remove: removePins
   };
 
 })();

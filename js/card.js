@@ -15,6 +15,11 @@
   var cardElement = similarCardTemplate.cloneNode(true);
   var popupClose = cardElement.querySelector('.popup__close');
 
+  var stylesPhotoCards = {
+    width: 45,
+    height: 40
+  };
+
   var renderCard = function (offerId) {
 
     if (offerId === undefined) {
@@ -49,6 +54,7 @@
     if (!data) {
       element.style.display = 'none';
     } else {
+      element.style = '';
       element.textContent = text;
     }
   };
@@ -70,6 +76,7 @@
     if (dataArr.length === 0) {
       featuresElement.style.display = 'none';
     } else {
+      featuresElement.style = '';
       for (var i = 0; i < dataArr.length; i++) {
         var li = document.createElement('li');
         li.classList.add('popup__feature', 'popup__feature--' + dataArr[i]);
@@ -84,12 +91,13 @@
     if (dataArr.length === 0) {
       photosElement.style.display = 'none';
     } else {
+      photosElement.style = '';
       for (var i = 0; i < dataArr.length; i++) {
         var img = document.createElement('img');
         img.classList.add('popup__photo');
         img.src = dataArr[i];
-        img.width = '45';
-        img.height = '40';
+        img.width = stylesPhotoCards.width;
+        img.height = stylesPhotoCards.height;
         photosElement.appendChild(img);
       }
     }
@@ -97,15 +105,18 @@
 
   var deleteMapCardPopup = function () {
     var mapCard = map.querySelector('.map__card');
+    var mapPins = map.querySelector('.map__pins');
+    var mapPinActive = mapPins.querySelector('.map__pin--active');
 
     if (mapCard !== null) {
+      if (mapPinActive) {
+        mapPinActive.classList.remove('map__pin--active');
+      }
       mapCard.remove();
-
       popupClose.removeEventListener('mousedown', onPopupCloseMousedown);
       popupClose.removeEventListener('keydown', onPopupClosePressEnter);
       map.removeEventListener('keydown', onPopupClosePressEsc);
     }
-
   };
 
   var onPopupCloseMousedown = function (evt) {
@@ -127,8 +138,8 @@
   };
 
   window.card = {
-    renderCard: renderCard,
-    deleteMapCardPopup: deleteMapCardPopup
+    render: renderCard,
+    deleteMapPopup: deleteMapCardPopup,
   };
 
 })();

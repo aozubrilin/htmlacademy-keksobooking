@@ -64,7 +64,7 @@
   };
 
   var setFilters = function () {
-    window.card.deleteMapCardPopup();
+    window.card.deleteMapPopup();
     var announcements = [];
     for (var index = 0; index < window.pin.announcements.length; index++) {
       var announcement = window.pin.announcements[index];
@@ -77,16 +77,20 @@
         break;
       }
     }
-
-    window.pin.renderPins(announcements);
+    window.pin.render(announcements);
   };
 
   var setDisable = function () {
+    mapFilterForm.classList.add('ad-form--disabled');
+    mapFeatures.disabled = true;
+    mapFilterForm.reset();
     setFormFieldsDisable(mapFilters, true);
     mapFilterForm.removeEventListener('change', setFilters);
   };
 
   var setEnable = function () {
+    mapFilterForm.classList.remove('ad-form--disabled');
+    mapFeatures.disabled = false;
     setFormFieldsDisable(mapFilters, false);
     mapFilterForm.addEventListener('change', window.debounce(setFilters));
   };
