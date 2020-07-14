@@ -25,6 +25,7 @@
     if (isMouseLeftButtonClick(evt) && window.mainPinClick === false) {
       window.mainPinClick = true;
       setAdFormEnable();
+      window.loadPhotos.setEnable();
       setMapEnable();
 
     }
