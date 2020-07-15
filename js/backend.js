@@ -9,7 +9,7 @@
   var REQUEST_METHODS = {
     get: 'GET',
     post: 'POST'
-  }
+  };
 
   var createXhr = function (onLoad, onError) {
 
