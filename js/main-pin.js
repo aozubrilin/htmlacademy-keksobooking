@@ -19,7 +19,7 @@
 
   var onMapPinMainClickHandle = function (evt) {
 
-    if (isMouseLeftButtonClick(evt) && window.mainPinClick === false) {
+    if (isMouseLeftButtonClick(evt) && !window.mainPinClick) {
       window.mainPinClick = true;
       window.loadPhotos.setEnable();
       window.map.setEnable();
